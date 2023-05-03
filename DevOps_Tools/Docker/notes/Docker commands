@@ -1,0 +1,64 @@
+Docker commands:
+
+A. BASIC COMMANDS:
+1. To check if docker is installed correctly:
+docker run hello-world
+
+The Docker daemon searches for the hello-world image locally, if not found, it pulls the image from a public registry called Docker Hub, creates a container from that image, and runs the container.
+
+2. To view the images present locally:
+docker images
+
+3. To view running containers:
+docker ps
+
+Use docker ps -a to see all the containers (including the ones which finished executing)
+Note: Container names are randomly generated however, to give user specific names, pass the --name [container_name] parameter along with docker run.
+
+B. BUILD COMMANDS:
+5. To build an image:
+docker build [OPTIONS] PATH | URL | -
+a.k.a, docker build <image_name>:<tag> <Dockerfile_path>
+ex: docker build -t python_hello_world:0.1 ~/test/.
+
+-t is to name and tag an image. If tag is not given, it will default to "latest" and it becomes more difficult to distinguish newer images from older ones.
+
+C. RUN COMMANDS:
+6. To run a container based on an image:
+docker run [OPTIONS] IMAGE [COMMAND] [ARG...]
+a.k.a., docker run --name <container_name> <base_image_name>:<tag>
+ex: docker run --name pyhelloworld python_hello_world:0.1
+
+For web servers:
+docker run -p 4000:80 --name my-app node-app:0.1
+
+Host's port 4000 will be mapped to container's port 80
+The container will run as long as the initial terminal is running. If you want the container to run in the background (not tied to the terminal's session), you need to specify the -d flag.
+
+7. To stop the container:
+docker stop <container_name>
+ex: docker stop pyhelloworld
+
+8. To delete the container:
+docker rm <container_name>
+
+9. To view the container logs:
+docker logs <container_id>
+
+Use -f as we use with tail command to view latest logs in action as the container is getting updated.
+
+10. To connect to a running container's backend (Bash):
+docker exec -it [container_id] bash
+
+This will connect to the container's backend and open up an interactive shell session with the PWD set as the WORKDIR in Dockerfile.
+
+11. Check containers metadata:
+docker inspect [container_id]
+
+Use --format to inspect specific fields from the returned JSON. For ex:
+docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' [container_id]
+
+D. PUSH THE IMAGES:
+12. To push the docker image:
+docker push [full_path_to_push]
+docker push us-central1-docker.pkg.dev/$PROJECT_ID/my-repository/node-app:0.2
